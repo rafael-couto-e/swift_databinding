@@ -8,6 +8,12 @@
 
 import UIKit
 
+// MARK: delegate protocols
+
+protocol MainViewControllerDelegate: class {
+    func didLogin(_ userData: User)
+}
+
 // MARK: class
 
 class MainViewController: UIViewController {
@@ -20,6 +26,7 @@ class MainViewController: UIViewController {
     
     // MARK: properties
     
+    weak var delegate: MainViewControllerDelegate?
     fileprivate lazy var viewModel = { return MainViewModel() }()
     
     // MARK: parent functions
@@ -43,23 +50,6 @@ class MainViewController: UIViewController {
         passwordField.bind(to: viewModel.password)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToDetails" {
-            guard
-                let vc = segue.destination as? DetailsViewController
-            else {
-                return
-            }
-            
-            vc.rx.methodInvoked(#selector(UIViewController.viewDidLoad))
-                .subscribe(
-                    onNext: { [weak self] _ in
-                        vc.viewModel.user.value = self?.viewModel.user.value
-                    }
-            )
-        }
-    }
-    
     // MARK: functions
     
     func updateButtonStatus(enabled: Bool) {
@@ -77,9 +67,12 @@ class MainViewController: UIViewController {
     @IBAction func didTapLogin(_ sender: Any) {
         self.showLoader()
         
-        self.viewModel.authenticate().observe(self) { [weak self] _ in
+        self.viewModel.authenticate().observe(self) { [weak self] user in
             self?.hideLoader()
-            self?.performSegue(withIdentifier: "goToDetails", sender: self)
+            
+            if let usr = user {
+                self?.delegate?.didLogin(usr)
+            }
         }
     }
 }

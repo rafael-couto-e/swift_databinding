@@ -25,7 +25,7 @@ class DetailsViewController: UIViewController {
     lazy var viewModel = {
         return DetailsViewModel()
     }()
-    
+
     // MARK: parent functions
     
     override func viewDidLoad() {

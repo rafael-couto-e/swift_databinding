@@ -17,7 +17,6 @@ class MainViewModel {
     let login = MutableLiveData<String>()
     let password = MutableLiveData<String>()
     let error = MutableLiveData<String>()
-    let user = MutableLiveData<User>()
     
     // MARK: computed properties
     
@@ -42,15 +41,17 @@ class MainViewModel {
     func authenticate() -> LiveData<User> {
         let (_, password) = self.validLoginAndPassword()
         
+        let user = MutableLiveData<User>()
+        
         LoginService.loadUserData(
             password: password,
-            success: { [weak self] user in
-                self?.user.value = user
+            success: { result in
+                user.value = result
             }, failure: { [weak self] error in
                 self?.error.value = error
             }
         )
         
-        return self.user
+        return user
     }
 }

@@ -162,7 +162,7 @@ extension BindingResolver where Self: NSObject {
                 .asObservable()
                 .subscribe(onNext: { _ in
                     self.valueChanged()
-                })
+                }).disposed(by: liveData.owner?.vc.disposeBag ?? DisposeBag())
         }
         
         self.binder = liveData

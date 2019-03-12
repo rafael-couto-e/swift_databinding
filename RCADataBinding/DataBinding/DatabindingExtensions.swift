@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 // MARL: NSObject
 
@@ -19,6 +20,44 @@ extension NSObject {
                 }
             }
         }
+    }
+}
+
+// MARK: UIViewController
+
+fileprivate var ak_MyDisposeBag: UInt8 = 0
+
+extension UIViewController {
+    var disposeBag: DisposeBag {
+        get {
+            if let obj = objc_getAssociatedObject(self, &ak_MyDisposeBag) as? DisposeBag {
+                return obj
+            }
+            
+            let obj = DisposeBag()
+            
+            objc_setAssociatedObject(
+                self, &ak_MyDisposeBag, obj,
+                objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN
+            )
+            
+            return obj
+        }
+        
+        set(newValue) {
+            objc_setAssociatedObject(
+                self, &ak_MyDisposeBag, newValue,
+                objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN
+            )
+        }
+    }
+    
+    func postLoad(of vc: UIViewController, callback: @escaping () -> Void) {
+        self.rx
+            .methodInvoked(#selector(UIViewController.viewDidLoad))
+            .subscribe(onNext: { _ in
+                callback()
+            }).disposed(by: vc.disposeBag)
     }
 }
 
