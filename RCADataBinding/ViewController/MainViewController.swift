@@ -34,25 +34,12 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.viewModel.login.observe(self) { [weak self] newValue in
-            self?.updateButtonStatus(enabled: self?.viewModel.shouldEnable ?? false)
-        }
-        
-        self.viewModel.password.observe(self) { [weak self] newValue in
-            self?.updateButtonStatus(enabled: self?.viewModel.shouldEnable ?? false)
-        }
-        
-        self.viewModel.error.observe(self) { error in
-            self.errorAlert(title: "Atenção", message: error)
-        }
-        
-        usernameField.bind(to: viewModel.login)
-        passwordField.bind(to: viewModel.password)
+        self.bindAndObserve()
     }
     
     // MARK: functions
     
-    func updateButtonStatus(enabled: Bool) {
+    private func updateButtonStatus(enabled: Bool) {
         let alpha: CGFloat = enabled ? 1.0 : 0.5
         
         self.confirmButton.isEnabled = enabled
@@ -60,6 +47,31 @@ class MainViewController: UIViewController {
             red: 0, green: 122/255,
             blue: 1, alpha: alpha
         )
+    }
+    
+    private func bindAndObserve() {
+        self.observe()
+        self.bind()
+    }
+    
+    private func bind() {
+        usernameField.bind(to: viewModel.login)
+        passwordField.bind(to: viewModel.password)
+    }
+    
+    private func observe() {
+        self.viewModel.mediator
+            .with(source: self.viewModel.login)
+            .and(source: self.viewModel.password)
+            .mediate(self) { [weak self] str in
+                self?.viewModel.mediator.value = self?.viewModel.shouldEnable
+            }.andObserve { [weak self] enable in
+                self?.updateButtonStatus(enabled: enable ?? false)
+        }
+        
+        self.viewModel.error.observe(self) { error in
+            self.errorAlert(title: "Atenção", message: error)
+        }
     }
     
     // MARK: IBActions

@@ -61,12 +61,57 @@ class MutableLiveData<T>: LiveData<T> {
 // MARK: class MediatorLiveData
 
 class MediatorLiveData<T>: MutableLiveData<T> {
-    func addSource() {
-        
+    fileprivate var sources: [Any] = []
+    
+    func add<S>(source: LiveData<S>, observer: @escaping (S?) -> Void) {
+        if let vc = source.owner?.vc {
+            source.observe(vc, observer: observer)
+        }
     }
     
-    func withSource() {
+    func with<S>(source: LiveData<S>) -> MediatorLiveDataChain<T, S> {
+        self.sources.append(source)
         
+        return MediatorLiveDataChain(mediator: self)
+    }
+    
+    func with<S>(source: LiveData<S>, observer: @escaping (S?) -> Void) -> MediatorLiveData<T> {
+        self.add(source: source, observer: observer)
+        
+        return self
+    }
+}
+
+class MediatorLiveDataChain<T, S> {
+    private let mediator: MediatorLiveData<T>
+    private var owner: LifecycleOwner?
+    
+    init(mediator: MediatorLiveData<T>) {
+        self.mediator = mediator
+    }
+    
+    func and(source: LiveData<S>) -> MediatorLiveDataChain<T, S> {
+        self.mediator.sources.append(source)
+        
+        return self
+    }
+    
+    func mediate(_ owner: UIViewController, observer: @escaping (S?) -> Void) -> MediatorLiveDataChain<T, S> {
+        self.owner = LifecycleOwner(owner: owner)
+        
+        for source in self.mediator.sources {
+            if let src = source as? LiveData<S> {
+                src.observe(owner, observer: observer)
+            }
+        }
+        
+        return self
+    }
+    
+    func andObserve(observer: @escaping (T?) -> Void) {
+        if let owner = self.owner?.vc {
+            self.mediator.observe(owner, observer: observer)
+        }
     }
 }
 

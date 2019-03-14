@@ -14,9 +14,16 @@ class MainViewModel {
     
     // MARK: properties
     
-    let login = MutableLiveData<String>()
-    let password = MutableLiveData<String>()
-    let error = MutableLiveData<String>()
+    private let _login = MutableLiveData<String>()
+    var login: LiveData<String> { return self._login }
+    
+    private let _password = MutableLiveData<String>()
+    var password: LiveData<String> { return self._password }
+    
+    private let _error = MutableLiveData<String>()
+    var error: LiveData<String> { return _error }
+    
+    let mediator = MediatorLiveData<Bool>()
     
     // MARK: computed properties
     
@@ -29,8 +36,8 @@ class MainViewModel {
     // MARK: methods
     
     private func validLoginAndPassword() -> (login: String, password: String) {
-        if let login = self.login.value {
-            if let password = self.password.value {
+        if let login = self._login.value {
+            if let password = self._password.value {
                 return (login, password)
             }
         }
@@ -48,7 +55,7 @@ class MainViewModel {
             success: { result in
                 user.value = result
             }, failure: { [weak self] error in
-                self?.error.value = error
+                self?._error.value = error
             }
         )
         
