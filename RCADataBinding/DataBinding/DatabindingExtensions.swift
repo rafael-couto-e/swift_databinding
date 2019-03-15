@@ -63,6 +63,18 @@ extension UIViewController {
 
 // MARK: Outlets
 
+extension UILabel: BindingResolver {
+    typealias BindingType = String
+    
+    func observingValue() -> String? {
+        return self.text
+    }
+    
+    func updateValue(with value: String) {
+        self.text = value
+    }
+}
+
 extension UITextField: BindingResolver {
     typealias BindingType = String
     

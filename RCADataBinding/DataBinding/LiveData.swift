@@ -118,13 +118,62 @@ class MediatorLiveDataChain<T, S> {
 // MARK: class Transformations
 
 class Transformations {
-    class func map() {
+    class func map<S, T>(
+        _ owner: UIViewController,
+        source: LiveData<S>,
+        callback: @escaping (S) -> T
+    ) -> LiveData<T> {
+        let result = MediatorLiveData<T>()
         
+        if source.owner == nil {
+            source.owner = LifecycleOwner(owner: owner)
+        }
+        
+        if result.owner == nil {
+            result.owner = LifecycleOwner(owner: owner)
+        }
+        
+        result.add(source: source) { _s in
+            if let s = _s { result.value = callback(s) }
+        }
+        
+        return result
     }
     
-    class func switchMap() {
+    /*class func switchMap<T, S>(
+        _ owner: UIViewController, source: LiveData<T>,
+        callback: @escaping (T) -> LiveData<S>
+    ) -> LiveData<S> {
+        let result = MediatorLiveData<S>()
         
-    }
+        if source.owner == nil {
+            source.owner = LifecycleOwner(owner: owner)
+        }
+        
+        if result.owner == nil {
+            result.owner = LifecycleOwner(owner: owner)
+        }
+        
+        result.add(source: source) { _t in
+            var ld: LiveData<S>?
+            
+            if let t = _t {
+                let newLd = callback(t)
+                
+                if ld === newLd { return }
+
+                ld = newLd
+                
+                if let _ld = ld {
+                    result.add(source: _ld) { _s in
+                        result.value = _s
+                    }
+                }
+            }
+        }
+        
+        return result
+    }*/
 }
 
 // MARK: class LifecycleOwner
@@ -154,7 +203,7 @@ protocol BindingResolver: NSObjectProtocol {
     associatedtype BindingType: Equatable
     func observingValue() -> BindingType?
     func updateValue(with value: BindingType)
-    func bind(to liveData: LiveData<BindingType>, callback: ((BindingType) -> Void)?)
+    func bind(_ owner: UIViewController, to liveData: LiveData<BindingType>, callback: ((BindingType) -> Void)?)
 }
 
 extension BindingResolver where Self: NSObject {
@@ -201,13 +250,17 @@ extension BindingResolver where Self: NSObject {
         }
     }
     
-    func bind(to liveData: LiveData<BindingType>, callback: ((BindingType) -> Void)? = nil) {
+    func bind(
+        _ owner: UIViewController,
+        to liveData: LiveData<BindingType>,
+        callback: ((BindingType) -> Void)? = nil
+    ) {
         if let _self = self as? UIControl {
             _self.rx.controlEvent([.valueChanged, .editingChanged])
                 .asObservable()
                 .subscribe(onNext: { _ in
                     self.valueChanged()
-                }).disposed(by: liveData.owner?.vc.disposeBag ?? DisposeBag())
+                }).disposed(by: owner.disposeBag)
         }
         
         self.binder = liveData

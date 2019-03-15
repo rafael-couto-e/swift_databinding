@@ -50,13 +50,13 @@ class MainViewController: UIViewController {
     }
     
     private func bindAndObserve() {
-        self.observe()
         self.bind()
+        self.observe()
     }
     
     private func bind() {
-        usernameField.bind(to: viewModel.login)
-        passwordField.bind(to: viewModel.password)
+        usernameField.bind(self, to: viewModel.login)
+        passwordField.bind(self, to: viewModel.password)
     }
     
     private func observe() {

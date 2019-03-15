@@ -23,7 +23,7 @@ class DetailsViewController: UIViewController {
     // MARK: properties
     
     lazy var viewModel = {
-        return DetailsViewModel()
+        return DetailsViewModel(self)
     }()
 
     // MARK: parent functions
@@ -31,13 +31,13 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.viewModel.user.observe(self) { user in
-            self.nameLabel.text = user?.name
-            self.availableLabel.text = user?.limits?.available
-            self.limitLabel.text = user?.limits?.total
-            self.usedLabel.text = user?.limits?.expent
-            
-            self.setupTableView()
+        self.nameLabel.bind(self, to: viewModel.username)
+        self.availableLabel.bind(self, to: viewModel.available)
+        self.limitLabel.bind(self, to: viewModel.total)
+        self.usedLabel.bind(self, to: viewModel.expent)
+        
+        self.viewModel.items.observe(self) { [weak self] _ in
+            self?.setupTableView()
         }
     }
     
