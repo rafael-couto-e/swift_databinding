@@ -31,14 +31,14 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.nameLabel.bind(self, to: viewModel.username)
-        self.availableLabel.bind(self, to: viewModel.available)
+        self.bind(nameLabel, to: viewModel.username)
+        self.bind(availableLabel, to: viewModel.available)
+        
         self.limitLabel.bind(self, to: viewModel.total)
         self.usedLabel.bind(self, to: viewModel.expent)
+        self.tableView.bind(self, to: viewModel.items, dataSource: self)
         
-        self.viewModel.items.observe(self) { [weak self] _ in
-            self?.setupTableView()
-        }
+        self.setupTableView()
     }
     
     // MARK: functions
@@ -50,10 +50,6 @@ class DetailsViewController: UIViewController {
                 bundle: nil
             ), forCellReuseIdentifier: "detailsCell"
         )
-        
-        self.tableView.dataSource = self
-        
-        self.tableView.reloadData()
     }
 }
 

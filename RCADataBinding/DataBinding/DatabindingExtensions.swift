@@ -59,6 +59,10 @@ extension UIViewController {
                 callback()
             }).disposed(by: vc.disposeBag)
     }
+    
+    func bind<T: BindingResolver>(_ outlet: T, to liveData: LiveData<T.BindingType>) {
+        outlet.bind(self, to: liveData, callback: nil)
+    }
 }
 
 // MARK: Outlets
@@ -120,5 +124,20 @@ extension UIStepper: BindingResolver {
     
     func updateValue(with value: Double) {
         self.value = value
+    }
+}
+
+extension UITableView {
+    func bind<T>(
+        _ owner: UIViewController, to liveData: LiveData<[T]>,
+        delegate: UITableViewDelegate? = nil,
+        dataSource: UITableViewDataSource? = nil
+    ) {
+        liveData.observe(owner) { [weak self] _ in
+            self?.delegate = delegate
+            self?.dataSource = dataSource
+            
+            self?.reloadData()
+        }
     }
 }
