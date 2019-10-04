@@ -27,7 +27,7 @@ class LoginCoordinator: Coordinator {
     // MARK: functions
     
     func start() {
-        let loginVc = MainViewController.storyboardInstance(storyboard: .main)
+        let loginVc = MainViewController()
         
         loginVc.title = "Login"
         loginVc.delegate = self

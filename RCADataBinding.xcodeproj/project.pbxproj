@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,7 @@
 		005DE3EC2232FA9C00D1377E /* CoordinatorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005DE3EB2232FA9C00D1377E /* CoordinatorExtensions.swift */; };
 		005DE3EE2232FAB500D1377E /* DetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005DE3ED2232FAB500D1377E /* DetailsCoordinator.swift */; };
 		005DE3F02233010F00D1377E /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005DE3EF2233010F00D1377E /* LoginCoordinator.swift */; };
+		0069D46B234777B300C5925D /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0069D46A234777B300C5925D /* UIViewExtension.swift */; };
 		00D93CA9223181EA00B6597E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D93CA8223181EA00B6597E /* AppDelegate.swift */; };
 		00D93CAB223181EA00B6597E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D93CAA223181EA00B6597E /* MainViewController.swift */; };
 		00D93CAE223181EA00B6597E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00D93CAC223181EA00B6597E /* Main.storyboard */; };
@@ -66,6 +67,7 @@
 		005DE3EB2232FA9C00D1377E /* CoordinatorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorExtensions.swift; sourceTree = "<group>"; };
 		005DE3ED2232FAB500D1377E /* DetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsCoordinator.swift; sourceTree = "<group>"; };
 		005DE3EF2233010F00D1377E /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
+		0069D46A234777B300C5925D /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		00D93CA5223181EA00B6597E /* RCADataBinding.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RCADataBinding.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00D93CA8223181EA00B6597E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00D93CAA223181EA00B6597E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 			children = (
 				00D93CF1223190E900B6597E /* StringExtensions+Service.swift */,
 				005DE3DC2232C5BF00D1377E /* UIViewControllerExtensions.swift */,
+				0069D46A234777B300C5925D /* UIViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -455,32 +458,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-RCADataBinding/Pods-RCADataBinding-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
-				"${BUILT_PRODUCTS_DIR}/PKHUD/PKHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-RCADataBinding/Pods-RCADataBinding-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireObjectMapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PKHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-RCADataBinding/Pods-RCADataBinding-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RCADataBinding/Pods-RCADataBinding-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RCADataBinding/Pods-RCADataBinding-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DE4A90C34FFC39B86239A05E /* [CP] Check Pods Manifest.lock */ = {
@@ -518,6 +504,7 @@
 				00D93CAB223181EA00B6597E /* MainViewController.swift in Sources */,
 				005DE3EE2232FAB500D1377E /* DetailsCoordinator.swift in Sources */,
 				005DE3E12232D8DE00D1377E /* DetailsCell.swift in Sources */,
+				0069D46B234777B300C5925D /* UIViewExtension.swift in Sources */,
 				00D93CA9223181EA00B6597E /* AppDelegate.swift in Sources */,
 				005DE3E82232F93B00D1377E /* Coordinator.swift in Sources */,
 				00D93CE3223184EF00B6597E /* User.swift in Sources */,
