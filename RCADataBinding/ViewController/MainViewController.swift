@@ -20,9 +20,11 @@ class MainViewController: UIViewController {
     
     // MARK: IBOutlets
     
-    @IBOutlet weak var usernameField: UITextField!
-    @IBOutlet weak var passwordField: UITextField!
-    @IBOutlet weak var confirmButton: UIButton!
+    private let usernameField: UITextField = UITextField(frame: .zero)
+    private let passwordField: UITextField = UITextField(frame: .zero)
+    private let confirmButton: UIButton = UIButton(frame: .zero)
+    private let savePasswordLabel: UILabel = UILabel(frame: .zero)
+    private let savePasswordSwitch: UISwitch = UISwitch(frame: .zero)
     
     // MARK: properties
     
@@ -31,8 +33,22 @@ class MainViewController: UIViewController {
     
     // MARK: parent functions
     
+    // MARK: initializers
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.setupLayout()
+        self.setupConstraints()
         
         self.bindAndObserve()
     }
@@ -54,9 +70,62 @@ class MainViewController: UIViewController {
         self.observe()
     }
     
+    private func setupLayout() {
+        self.view.addSubviews([
+            self.usernameField,
+            self.passwordField,
+            self.savePasswordLabel,
+            self.savePasswordSwitch,
+            self.confirmButton
+        ])
+        
+        self.usernameField.borderStyle = .roundedRect
+        self.usernameField.placeholder = "Login"
+        
+        self.passwordField.borderStyle = .roundedRect
+        self.passwordField.placeholder = "Senha"
+        
+        self.savePasswordLabel.text = "Lembrar minha senha"
+        
+        self.savePasswordSwitch.isOn = false
+        
+        self.confirmButton.setTitle("Login", for: .normal)
+        self.confirmButton.setTitleColor(.black, for: .normal)
+        self.confirmButton.backgroundColor = UIColor(
+            red: 0, green: 122/255,
+            blue: 1, alpha: 0.5
+        )
+        
+        self.view.backgroundColor = .white
+    }
+    
+    private func setupConstraints() {
+        self.usernameField.top(to: self.view.safeAreaLayoutGuide.topAnchor, padding: 16)
+        self.usernameField.leading(to: self.view.leadingAnchor, padding: 16)
+        self.usernameField.trailing(to: self.view.trailingAnchor, padding: 16)
+        self.usernameField.heigth(equalTo: 40)
+        
+        self.passwordField.top(to: self.usernameField.bottomAnchor, padding: 16)
+        self.passwordField.leading(to: self.view.leadingAnchor, padding: 16)
+        self.passwordField.trailing(to: self.view.trailingAnchor, padding: 16)
+        self.passwordField.heigth(equalTo: 40)
+        
+        self.savePasswordSwitch.top(to: self.passwordField.bottomAnchor, padding: 16)
+        self.savePasswordSwitch.trailing(to: self.view.trailingAnchor, padding: 16)
+        
+        self.savePasswordLabel.trailing(to: self.savePasswordSwitch.leadingAnchor, padding: 16)
+        self.savePasswordLabel.centerY(to: self.savePasswordSwitch)
+        
+        self.confirmButton.top(to: self.savePasswordSwitch.bottomAnchor, padding: 16)
+        self.confirmButton.leading(to: self.view.leadingAnchor, padding: 16)
+        self.confirmButton.trailing(to: self.view.trailingAnchor, padding: 16)
+        self.confirmButton.heigth(equalTo: 40)
+    }
+    
     private func bind() {
         usernameField.bind(self, to: viewModel.login)
         passwordField.bind(self, to: viewModel.password)
+        confirmButton.addTarget(self, action: #selector(didTapLogin), for: .touchUpInside)
     }
     
     private func observe() {
@@ -74,9 +143,9 @@ class MainViewController: UIViewController {
         }
     }
     
-    // MARK: IBActions
+    // MARK: objc functions
     
-    @IBAction func didTapLogin(_ sender: Any) {
+    @objc private func didTapLogin() {
         self.showLoader()
         
         self.viewModel.authenticate().observe(self) { [weak self] user in
